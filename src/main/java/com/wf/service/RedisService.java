@@ -29,6 +29,14 @@ public interface RedisService {
     Long freeze(List<String> keys,List<String> args);
 
     /**
+     * 检查lua脚本
+     * @param keys
+     * @param args
+     * @return
+     */
+    Long upsert(List<String> keys,List<String> args);
+
+    /**
      * 执行回滚lua脚本
      * @param keys
      * @param args

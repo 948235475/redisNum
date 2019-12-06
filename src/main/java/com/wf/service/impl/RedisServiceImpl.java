@@ -75,6 +75,11 @@ public class RedisServiceImpl implements RedisService {
         return (Long)evalSha(RedisConfig.FREEZE_LUA,keys,args);
     }
 
+    @Override
+    public Long upsert(List<String> keys, List<String> args) {
+        return (Long)evalSha(RedisConfig.FIND_ADD_LUA,keys,args);
+    }
+
 
     @Override
     public Long rollback(List<String> keys, List<String> args) {

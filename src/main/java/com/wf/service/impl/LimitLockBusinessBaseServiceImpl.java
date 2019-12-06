@@ -149,12 +149,14 @@ public abstract class LimitLockBusinessBaseServiceImpl implements LimitLockBusin
             keys.add(config.getKey());
             List<String> args = new ArrayList<>();
             args.add(num+"");
+            args.add((limit-count)+"");
             int inr = redisService.freeze(keys,args).intValue();
             if (NOT_ENOUGH_RESOURCE == inr){
                 return NOT_ENOUGH_RESOURCE;
             }else if (NOT_EXISTS_KEY == inr){
                 if (lockService.lockIfHasReadRight(config.getLockName())){
-                    valueOperations.set(config.getKey(),limit-count,3,TimeUnit.MINUTES);
+                    //valueOperations.set(config.getKey(),limit-count,3,TimeUnit.MINUTES);
+                    redisService.upsert(keys,args).intValue();
                     lockService.unlockReadLock(config.getLockName());
                     return freeze(num, limitArgs, countArgs, config);
                 }else {
@@ -166,8 +168,7 @@ public abstract class LimitLockBusinessBaseServiceImpl implements LimitLockBusin
                 return UNKNOW_ERROR;
             }
         }catch (Exception e){
-            System.out.println(e);
-            log.info(""+e);
+            e.printStackTrace();
             return EXCEPTION;
         }
     }
