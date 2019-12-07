@@ -103,6 +103,7 @@ public abstract class LimitLockBusinessBaseServiceImpl implements LimitLockBusin
                 return new Result(ResultEnum.EXCEPTION_ON_COUNT);
             default:
                 if (!lockService.lockIfHasWriteRight(config.getLockName())){
+                    exceptionRollBack(num, limit, count, config);
                     return new Result(ResultEnum.HAS_NO_WRITE_REGHT);
                 }
                 Result result = config.getWriteBus().apply(write);
@@ -129,6 +130,19 @@ public abstract class LimitLockBusinessBaseServiceImpl implements LimitLockBusin
                     }
                 }
                 return result;
+        }
+    }
+
+    public void exceptionRollBack(int num, Object[] limit, Object[] count, Config config){
+        int rollBackResult;
+        if (num > 0){
+            rollBackResult = rollback(num,limit,count,config);
+        }else {
+            rollBackResult = rollback(num,limit,count,config);
+        }
+        if (rollBackResult < 0){
+            //回滚失败删除key
+            redisTemplate.expire(config.getKey(),100,TimeUnit.MILLISECONDS);
         }
     }
 
