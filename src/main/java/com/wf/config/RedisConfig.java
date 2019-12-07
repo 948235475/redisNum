@@ -48,17 +48,10 @@ public class RedisConfig {
     public static final String FIND_ADD_LUA =
             "local exists = redis.call(\"exists\",KEYS[1])\n" +
                     "if(exists ~= 0) then\n" +
-                    "  local num = redis.call(\"get\",KEYS[1])\n" +
-                    "  local now = num - tonumber(ARGV[1])\n" +
-                    "  if(now >= 0) then\n" +
-                    "    redis.call(\"set\",KEYS[1],now,\"EX\",\"180\")\n" +
-                    "    return now\n" +
-                    "  else\n" +
-                    "    return -2\n" +
-                    "  end\n" +
+                    "  return 1\n" +
                     "else\n" +
                     "  redis.call(\"set\",KEYS[1],ARGV[2],\"EX\",\"180\")\n" +
-                    "  return -1\n" +
+                    "  return 0\n" +
                     "end";
 
     /**
