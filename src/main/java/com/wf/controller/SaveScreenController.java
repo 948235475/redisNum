@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
 
 @RestController
 @RequestMapping("/screen")
@@ -34,5 +35,10 @@ public class SaveScreenController {
             result.setMessage("系统异常");
         }
         return result;
+    }
+
+    public static void main(String[] args) {
+        Date a = new Date();
+        System.out.println(a.getTime());
     }
 }
